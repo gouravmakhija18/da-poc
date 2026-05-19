@@ -1,0 +1,108 @@
+.language-selector {
+  position: relative;
+  display: inline-block;
+}
+
+.language-selector-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--dark-color);
+  border-radius: 4px;
+  background: var(--background-color);
+  color: var(--text-color);
+  font: inherit;
+  font-size: var(--body-font-size-s);
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.language-selector-toggle:hover,
+.language-selector-toggle:focus-visible {
+  border-color: var(--link-color);
+  outline: none;
+}
+
+.language-selector-toggle .icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.language-selector-label {
+  white-space: nowrap;
+}
+
+.language-selector-chevron {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+  transform: rotate(45deg);
+  margin-top: -3px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.language-selector-toggle[aria-expanded="true"] .language-selector-chevron {
+  transform: rotate(-135deg);
+  margin-top: 3px;
+}
+
+.language-selector-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--background-color);
+  border: 1px solid var(--dark-color);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  min-width: 100%;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.language-selector-list:not([hidden]) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.language-selector-item {
+  margin: 0;
+}
+
+.language-selector-item a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: var(--body-font-size-s);
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+.language-selector-item a:hover,
+.language-selector-item a:focus-visible {
+  background: var(--light-color);
+  color: var(--link-color);
+  outline: none;
+}
+
+.language-selector-item.active a {
+  font-weight: 600;
+  color: var(--link-color);
+}
+
+.language-selector-item .icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
