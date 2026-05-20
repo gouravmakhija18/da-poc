@@ -99,10 +99,7 @@
   text-decoration: none;
 }
 
-.notes-from-the-field__button:focus-visible,
-.notes-from-the-field__control:focus-visible,
-.notes-from-the-field__media:focus-visible,
-.notes-from-the-field__card-link:focus-visible {
+.notes-from-the-field__button:focus-visible {
   outline: 3px solid var(--notes-from-the-field-focus);
   outline-offset: 4px;
 }
@@ -208,6 +205,11 @@
   text-decoration: none;
 }
 
+.notes-from-the-field__media:focus-visible {
+  outline: 3px solid var(--notes-from-the-field-focus);
+  outline-offset: 4px;
+}
+
 .notes-from-the-field__media picture,
 .notes-from-the-field__media img {
   display: block;
@@ -254,6 +256,7 @@
   letter-spacing: 0;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .notes-from-the-field__card-description p {
@@ -275,6 +278,11 @@
 .notes-from-the-field__card-link:hover {
   color: var(--notes-from-the-field-cta-background);
   text-decoration: underline;
+}
+
+.notes-from-the-field__card-link:focus-visible {
+  outline: 3px solid var(--notes-from-the-field-focus);
+  outline-offset: 4px;
 }
 
 .notes-from-the-field__controls {
@@ -357,6 +365,11 @@
   transform: rotate(45deg);
 }
 
+.notes-from-the-field__control:focus-visible {
+  outline: 3px solid var(--notes-from-the-field-focus);
+  outline-offset: 4px;
+}
+
 .notes-from-the-field__status {
   position: absolute;
   width: 1px;
@@ -364,7 +377,7 @@
   margin: -1px;
   padding: 0;
   overflow: hidden;
-  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
   border: 0;
   white-space: nowrap;
 }
@@ -510,14 +523,15 @@
     flex-wrap: nowrap;
   }
 
+  .notes-from-the-field__card-description {
+    font-size: 16px;
+  }
+
   .notes-from-the-field__slide--active .notes-from-the-field__card-description,
   .notes-from-the-field__slide--static-featured .notes-from-the-field__card-description {
     flex-basis: auto;
     -webkit-line-clamp: 1;
-  }
-
-  .notes-from-the-field__card-description {
-    font-size: 16px;
+    line-clamp: 1;
   }
 
   .notes-from-the-field__card-link:any-link {
