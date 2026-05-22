@@ -1,6 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
-const BLOCK_NAME = 'notes-from-the-field';
+const BLOCK_NAME = 'featured-news';
 const READ_MORE_LABEL = 'Read more';
 const URL_PATTERN = /^(https?:\/\/|\/|#)/i;
 let blockCount = 0;
@@ -27,7 +27,6 @@ function isDateText(text) {
 function getUrlFromText(text) {
   const value = text.trim();
   if (!URL_PATTERN.test(value)) return '';
-
   try {
     return new URL(value, window.location.href).href;
   } catch {
@@ -59,7 +58,7 @@ function buildTitle(cell, id) {
   if (!cell || !getCellText(cell)) return null;
 
   const title = document.createElement('h2');
-  title.className = `${BLOCK_NAME}__title`;
+  title.className = `${BLOCK_NAME}-title`;
   title.id = id;
 
   const authoredHeading = cell.querySelector('h1, h2, h3, h4, h5, h6');
@@ -78,7 +77,7 @@ function buildDescription(cell) {
   if (!cell || !getCellText(cell)) return null;
 
   const description = document.createElement('div');
-  description.className = `${BLOCK_NAME}__description`;
+  description.className = `${BLOCK_NAME}-description`;
   moveChildren(cell, description);
 
   return description;
@@ -91,11 +90,11 @@ function buildButton(cell) {
   if (!authoredLink) return null;
 
   const button = authoredLink.cloneNode(true);
-  button.className = `${BLOCK_NAME}__button`;
+  button.className = `${BLOCK_NAME}-button`;
   button.setAttribute('aria-label', button.textContent.trim() || 'Learn more');
 
   const icon = document.createElement('span');
-  icon.className = `${BLOCK_NAME}__button-icon`;
+  icon.className = `${BLOCK_NAME}-button-icon`;
   icon.setAttribute('aria-hidden', 'true');
   button.append(icon);
 
@@ -105,7 +104,7 @@ function buildButton(cell) {
 function buildIntro(rows, uid) {
   const { titleCell, descriptionCell, buttonCell } = getIntroCells(rows);
   const intro = document.createElement('div');
-  intro.className = `${BLOCK_NAME}__intro`;
+  intro.className = `${BLOCK_NAME}-intro`;
 
   const title = buildTitle(titleCell, `${uid}-title`);
   const description = buildDescription(descriptionCell);
@@ -140,6 +139,7 @@ function getCardLink(cells, imageCell) {
   const urlCell = reversedCells.find((cell) => (
     cell !== imageCell && getUrlFromText(getCellText(cell))
   ));
+
   if (!urlCell) {
     return {
       href: '',
@@ -168,16 +168,10 @@ function getCardContentCells(textCells) {
   const [firstTextCell, secondTextCell] = textCells;
 
   if (firstTextCell && secondTextCell && isDateText(getCellText(firstTextCell))) {
-    return {
-      descriptionCell: secondTextCell,
-      dateCell: firstTextCell,
-    };
+    return { descriptionCell: secondTextCell, dateCell: firstTextCell };
   }
 
-  return {
-    descriptionCell: firstTextCell,
-    dateCell: secondTextCell,
-  };
+  return { descriptionCell: firstTextCell, dateCell: secondTextCell };
 }
 
 function readCard(row) {
@@ -254,7 +248,7 @@ function createResponsivePicture(image, eager = false) {
   const breakpoints = [
     { media: '(min-width: 1200px)', width: '1120', height: '630' },
     { media: '(min-width: 900px)', width: '900', height: '506' },
-    { media: '(min-width: 600px)', width: '720', height: '720' },
+    { media: '(min-width: 600px)', width: '720', height: '405' },
     { width: '450', height: '450' },
   ];
 
@@ -278,7 +272,7 @@ function buildMedia(card, index) {
   if (!picture) return null;
 
   const media = document.createElement(card.href ? 'a' : 'div');
-  media.className = `${BLOCK_NAME}__media`;
+  media.className = `${BLOCK_NAME}-media`;
   if (card.href) {
     media.href = card.href;
     media.setAttribute('aria-label', card.label);
@@ -292,7 +286,7 @@ function buildCardDescription(card) {
   if (!card.descriptionCell || !getCellText(card.descriptionCell)) return null;
 
   const description = document.createElement('div');
-  description.className = `${BLOCK_NAME}__card-description`;
+  description.className = `${BLOCK_NAME}-card-description`;
   moveChildren(card.descriptionCell, description);
 
   return description;
@@ -300,38 +294,39 @@ function buildCardDescription(card) {
 
 function buildCard(card, index, total) {
   const slide = document.createElement('li');
-  slide.className = `${BLOCK_NAME}__slide`;
+  slide.className = `${BLOCK_NAME}-slide`;
   slide.setAttribute('role', 'group');
   slide.setAttribute('aria-roledescription', 'slide');
   slide.setAttribute('aria-label', `${index + 1} of ${total}`);
 
   const article = document.createElement('article');
-  article.className = `${BLOCK_NAME}__card`;
+  article.className = `${BLOCK_NAME}-card`;
 
   const media = buildMedia(card, index);
   if (media) article.append(media);
 
   const body = document.createElement('div');
-  body.className = `${BLOCK_NAME}__card-body`;
+  body.className = `${BLOCK_NAME}-card-body`;
 
   if (card.date) {
     const date = document.createElement('p');
-    date.className = `${BLOCK_NAME}__date`;
+    date.className = `${BLOCK_NAME}-date`;
     date.textContent = card.date;
     body.append(date);
   }
 
   const description = buildCardDescription(card);
   const cta = card.href ? document.createElement('a') : null;
+
   if (cta) {
-    cta.className = `${BLOCK_NAME}__card-link`;
+    cta.className = `${BLOCK_NAME}-card-link`;
     cta.href = card.href;
     cta.textContent = card.label || READ_MORE_LABEL;
   }
 
   if (description || cta) {
     const copy = document.createElement('div');
-    copy.className = `${BLOCK_NAME}__card-copy`;
+    copy.className = `${BLOCK_NAME}-card-copy`;
     if (description) copy.append(description);
     if (cta) copy.append(cta);
     body.append(copy);
@@ -359,11 +354,11 @@ function updateSlides(slides, activeIndex, carouselEnabled, status) {
     const isStaticLeading = !carouselEnabled && index === 0 && slides.length > 1;
     const isStaticFeatured = !carouselEnabled && (index === 1 || slides.length === 1);
 
-    slide.classList.toggle(`${BLOCK_NAME}__slide--active`, carouselEnabled && isActive);
-    slide.classList.toggle(`${BLOCK_NAME}__slide--previous`, carouselEnabled && isPrevious);
-    slide.classList.toggle(`${BLOCK_NAME}__slide--inactive`, carouselEnabled && !isActive && !isPrevious);
-    slide.classList.toggle(`${BLOCK_NAME}__slide--static-leading`, isStaticLeading);
-    slide.classList.toggle(`${BLOCK_NAME}__slide--static-featured`, isStaticFeatured);
+    slide.classList.toggle(`${BLOCK_NAME}-slide--active`, carouselEnabled && isActive);
+    slide.classList.toggle(`${BLOCK_NAME}-slide--previous`, carouselEnabled && isPrevious);
+    slide.classList.toggle(`${BLOCK_NAME}-slide--inactive`, carouselEnabled && !isActive && !isPrevious);
+    slide.classList.toggle(`${BLOCK_NAME}-slide--static-leading`, isStaticLeading);
+    slide.classList.toggle(`${BLOCK_NAME}-slide--static-featured`, isStaticFeatured);
 
     if (carouselEnabled) {
       slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
@@ -376,25 +371,25 @@ function updateSlides(slides, activeIndex, carouselEnabled, status) {
 
   if (status && carouselEnabled) {
     // eslint-disable-next-line no-param-reassign
-    status.textContent = `Showing note ${activeIndex + 1} of ${slides.length}`;
+    status.textContent = `Showing article ${activeIndex + 1} of ${slides.length}`;
   }
 }
 
 function buildControls(uid) {
   const controls = document.createElement('div');
-  controls.className = `${BLOCK_NAME}__controls`;
+  controls.className = `${BLOCK_NAME}-controls`;
   controls.setAttribute('role', 'group');
-  controls.setAttribute('aria-label', 'Notes carousel controls');
+  controls.setAttribute('aria-label', 'Featured news carousel controls');
 
   ['previous', 'next'].forEach((action) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = `${BLOCK_NAME}__control ${BLOCK_NAME}__control--${action}`;
+    button.className = `${BLOCK_NAME}-control ${BLOCK_NAME}-control--${action}`;
     button.setAttribute('aria-controls', `${uid}-track`);
-    button.setAttribute('aria-label', action === 'previous' ? 'Previous note' : 'Next note');
+    button.setAttribute('aria-label', action === 'previous' ? 'Previous article' : 'Next article');
 
     const icon = document.createElement('span');
-    icon.className = `${BLOCK_NAME}__control-icon`;
+    icon.className = `${BLOCK_NAME}-control-icon`;
     icon.setAttribute('aria-hidden', 'true');
     button.append(icon);
     controls.append(button);
@@ -418,20 +413,20 @@ function activateAnimation(block, direction) {
 function buildCarousel(cards, uid, labelledBy, block) {
   const carouselEnabled = cards.length > 2;
   const carousel = document.createElement('div');
-  carousel.className = `${BLOCK_NAME}__carousel`;
+  carousel.className = `${BLOCK_NAME}-carousel`;
   carousel.setAttribute('role', 'region');
   carousel.setAttribute('aria-roledescription', 'carousel');
   if (labelledBy) carousel.setAttribute('aria-labelledby', labelledBy);
-  else carousel.setAttribute('aria-label', 'Notes from the field');
+  else carousel.setAttribute('aria-label', 'Featured news');
 
   const controls = buildControls(uid);
   controls.hidden = !carouselEnabled;
 
   const viewport = document.createElement('div');
-  viewport.className = `${BLOCK_NAME}__viewport`;
+  viewport.className = `${BLOCK_NAME}-viewport`;
 
   const track = document.createElement('ul');
-  track.className = `${BLOCK_NAME}__track`;
+  track.className = `${BLOCK_NAME}-track`;
   track.id = `${uid}-track`;
 
   cards.forEach((card, index) => {
@@ -440,7 +435,7 @@ function buildCarousel(cards, uid, labelledBy, block) {
   viewport.append(track);
 
   const status = document.createElement('p');
-  status.className = `${BLOCK_NAME}__status`;
+  status.className = `${BLOCK_NAME}-status`;
   status.setAttribute('aria-live', 'polite');
 
   carousel.append(controls, viewport, status);
@@ -450,11 +445,11 @@ function buildCarousel(cards, uid, labelledBy, block) {
   updateSlides(slides, activeIndex, carouselEnabled, status);
 
   if (carouselEnabled) {
-    const previousButton = controls.querySelector(`.${BLOCK_NAME}__control--previous`);
-    const nextButton = controls.querySelector(`.${BLOCK_NAME}__control--next`);
+    const previousButton = controls.querySelector(`.${BLOCK_NAME}-control--previous`);
+    const nextButton = controls.querySelector(`.${BLOCK_NAME}-control--next`);
 
     const goTo = (index, direction) => {
-      const shouldMoveFocus = !!document.activeElement?.closest?.(`.${BLOCK_NAME}__slide`);
+      const shouldMoveFocus = !!document.activeElement?.closest?.(`.${BLOCK_NAME}-slide`);
       activeIndex = (index + slides.length) % slides.length;
       activateAnimation(block, direction);
       updateSlides(slides, activeIndex, carouselEnabled, status);
@@ -483,6 +478,10 @@ function buildCarousel(cards, uid, labelledBy, block) {
   return carousel;
 }
 
+/**
+ * decorate the block
+ * @param {Element} block the block
+ */
 export default function decorate(block) {
   blockCount += 1;
   const uid = `${BLOCK_NAME}-${blockCount}`;
@@ -496,7 +495,7 @@ export default function decorate(block) {
   if (!intro.hasContent && cards.length === 0) return;
 
   const inner = document.createElement('div');
-  inner.className = `${BLOCK_NAME}__inner`;
+  inner.className = `${BLOCK_NAME}-inner`;
 
   if (intro.hasContent) inner.append(intro.element);
   if (cards.length > 0) {
