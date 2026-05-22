@@ -543,7 +543,7 @@
 
   .featured-news-slide--previous .featured-news-media,
   .featured-news-slide--static-leading .featured-news-media {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 1 / 1;
     clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
   }
 
@@ -583,6 +583,39 @@
 
   .featured-news-inner {
     grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);
+  }
+}
+
+/* Card variant — single featured card, no carousel, no small leading image */
+
+.featured-news.card .featured-news-controls {
+  display: none;
+}
+
+@media (width >= 1024px) {
+  /* Place carousel in column 2 so intro (col 1) and card (col 2) sit side by side */
+  .featured-news.card .featured-news-intro {
+    z-index: auto;
+  }
+
+  .featured-news.card .featured-news-carousel {
+    grid-column: 2;
+    z-index: auto;
+  }
+
+  /* Remove controls gap — no controls in card variant */
+  .featured-news.card .featured-news-viewport {
+    padding-top: 0;
+  }
+
+  .featured-news.card.featured-news--static .featured-news-track {
+    display: block;
+    min-height: 0;
+  }
+
+  .featured-news.card .featured-news-slide--static-featured {
+    margin-top: 0;
+    transform: translateY(0);
   }
 }
 

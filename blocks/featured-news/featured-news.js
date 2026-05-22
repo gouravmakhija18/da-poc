@@ -275,7 +275,8 @@ function buildMedia(card, index) {
   media.className = `${BLOCK_NAME}-media`;
   if (card.href) {
     media.href = card.href;
-    media.setAttribute('aria-label', card.label);
+    const linkLabel = card.date ? `${card.label}: ${card.date}` : card.label;
+    media.setAttribute('aria-label', linkLabel);
   }
   media.append(picture);
 
@@ -322,6 +323,8 @@ function buildCard(card, index, total) {
     cta.className = `${BLOCK_NAME}-card-link`;
     cta.href = card.href;
     cta.textContent = card.label || READ_MORE_LABEL;
+    const ctaLabel = card.date ? `${card.label}: ${card.date}` : card.label;
+    cta.setAttribute('aria-label', ctaLabel);
   }
 
   if (description || cta) {
@@ -491,7 +494,10 @@ export default function decorate(block) {
   const cardRows = firstCardRowIndex === -1 ? [] : rows.slice(firstCardRowIndex);
 
   const intro = buildIntro(introRows, uid);
-  const cards = cardRows.map(readCard).filter(Boolean);
+  const allCards = cardRows.map(readCard).filter(Boolean);
+  const isCardVariant = block.classList.contains('card');
+  const cards = isCardVariant ? allCards.slice(0, 1) : allCards;
+
   if (!intro.hasContent && cards.length === 0) return;
 
   const inner = document.createElement('div');
