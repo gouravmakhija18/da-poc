@@ -23,6 +23,9 @@ yarn-error.log*
 # Local dev media (test images for local block validation)
 da-poc/
 
+# Draft HTML files — local validation only, not for production
+drafts/
+
 # Build & cache artifacts
 dist/*
 .cache/*

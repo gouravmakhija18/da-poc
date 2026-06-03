@@ -1,0 +1,14 @@
+{
+  "project": "DA POC",
+  "plugins": [
+    {
+      "id": "blocks-library",
+      "title": "Block Library",
+      "environments": ["edit"],
+      "url": "https://www.aem.live/tools/sidekick/blocks/index.html",
+      "passConfig": true,
+      "passReferrer": true,
+      "includePaths": ["**.docx**", "**"]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  ":type": "multi-sheet",
+  ":version": 3,
+  ":names": [
+    "blocks"
+  ],
+  "blocks": {
+    "total": 3,
+    "offset": 0,
+    "limit": 3,
+    "data": [
+      {
+        "name": "Test Cards",
+        "path": "/docs/library/blocks/test-cards"
+      },
+      {
+        "name": "Featured News",
+        "path": "/docs/library/blocks/featured-news"
+      },
+      {
+        "name": "Language Selector",
+        "path": "/docs/library/blocks/language-selector"
+      }
+    ],
+    ":type": "sheet"
+  }
+}
